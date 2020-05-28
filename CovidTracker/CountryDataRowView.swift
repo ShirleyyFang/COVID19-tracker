@@ -35,7 +35,7 @@ struct CountryDataRowView: View {
             Spacer()
             
             Text(countryData.recovered.formatNumber())
-                .frame(width: 57, height:40, alignment: .center)
+                .frame(width: 58, height:40, alignment: .center)
                 .font(.subheadline)
                 .foregroundColor(.green)
         }
