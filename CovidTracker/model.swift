@@ -26,12 +26,11 @@ struct TotalData {
 struct CountryData{
     
     let country: String
-    let confirmed: Int64   //handy for core data ??
+    let confirmed: Int64    //handy for core data ??
     let newConfirmed: Int64
     let deaths: Int64
     let recovered: Int64
-//    let longitude: Double
-//    let latitude: Double
+    
     
     var fatalityRate: Double {
         return (100.00*Double(deaths))/Double(confirmed)
@@ -42,6 +41,14 @@ struct CountryData{
     }
 }
 
+struct MapData{
+    let country: String
+    let confirmed: Int64
+    let deaths: Int64
+    let longitude: Double
+    let latitude: Double
+}
 
 let testTotalData = TotalData(confirmed: 200, newConfirmed: 100, deaths: 20, recovered: 50)
-let testCountryData = CountryData(country: "Test", confirmed: 500, newConfirmed: 300, deaths: 200, recovered: 100)
+let testCountryData = CountryData(country: "test", confirmed: 200, newConfirmed: 100, deaths: 20, recovered: 20)
+
