@@ -13,6 +13,7 @@ import SwiftyJSON
 class CovidFetchRequest: ObservableObject{
     
     @Published var allCountries:[CountryData] = []
+    @Published var mapData:[MapData] = []
     @Published var totalData:TotalData = testTotalData
     
     init() {
@@ -39,6 +40,23 @@ class CovidFetchRequest: ObservableObject{
         }
     }
     
+    func getCoordinates(countryCode:String,country:String,confirmed:Int64,deaths:Int64){
+        var lat = 0.0
+        var long = 0.0
+        AF.request("https://api.ipgeolocationapi.com/countries/\(countryCode ?? "AF")").responseJSON{response in
+            let geoResult = response.value
+            if geoResult != nil{
+                let geoDict = geoResult as! Dictionary<String,AnyObject>
+                if geoDict["geo"] != nil{
+                    lat = geoDict["geo"]!["latitude"]!! as! Double
+                    long = geoDict["geo"]!["longitude"]!! as! Double
+                    let MapObject = MapData(country: country, confirmed: confirmed,deaths: deaths,longitude:long, latitude:lat )
+                    self.mapData.append(MapObject)
+                }
+            }
+        }
+    }
+    
     func getAllCountries(){
         AF.request("https://api.covid19api.com/summary").responseJSON { response in
             
@@ -53,13 +71,16 @@ class CovidFetchRequest: ObservableObject{
                     let confirmed = countryData["TotalConfirmed"] as? Int64
                     let newConfirmed = countryData["NewConfirmed"] as? Int64
                     let deaths = countryData["TotalDeaths"] as? Int64
+                    let countryCode = countryData["CountryCode"] as? String
                     
                     let CountryObject = CountryData(country: country ?? "Error", confirmed: confirmed ?? 0, newConfirmed: newConfirmed ?? 0, deaths: deaths ?? 0, recovered: recovered ?? 0)
-                    
                     allCount.append(CountryObject)
+                    
+                    let coordinate = self.getCoordinates(countryCode: countryCode!,country:country ?? "Error",confirmed:confirmed ?? 0,deaths:deaths ?? 0)
               }
-            }
+            }//allCount.count = 186
             self.allCountries = allCount.sorted(by: {$0.confirmed > $1.confirmed})
         }
     }
 }
+    
