@@ -1,1 +1,1 @@
-# COVID19-tracker
+![image](COVID-Tracker.png)
